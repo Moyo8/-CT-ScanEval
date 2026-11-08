@@ -3,13 +3,13 @@
 Deadline: **Nov 9, 05:15 GMT = 06:15 Nigerian time**. Aim to submit by midnight on Nov 8.
 
 ## 1. Run the models (about 30 min)
-1. Download `dist/CT-ScanEval_submission.zip`.
-2. Open `CT_ScanEval_Colab.ipynb` in Colab (File, Upload notebook).
-3. Add your key(s) as Colab Secrets and run all cells.
-4. You need **at least one frontier model with 3 trials**. A second model makes "results show a clear spread across models" possible. Good options:
+1. Open the notebook straight from GitHub (nothing to download):
+   https://colab.research.google.com/github/Moyo8/-CT-ScanEval/blob/main/CT_ScanEval_Colab.ipynb
+2. Add your key(s) as Colab Secrets, plus a `GITHUB_TOKEN` (see the last section of the notebook). Then use Runtime, Run all.
+3. You need **at least one frontier model with 3 trials**. A second model makes "results show a clear spread across models" possible. Good options:
    - two Claude models (`claude-opus-5-5` and `claude-haiku-5-5`), or
    - Claude plus whichever OpenAI or Gemini key you have.
-5. Download `ctscaneval_runs.zip` at the end.
+4. The last cell pushes `results/` and `transcripts/` back to GitHub, where Claude can read them and help with the analysis.
 
 Sanity checks from the guide:
 - If a strong model scores 0% everywhere, look for a broken task before claiming a finding.
