@@ -84,9 +84,10 @@ pip install -r requirements.txt
 python -m pytest -q tests                       # 60 grader tests
 python run_eval.py --provider oracle --trials 1 # reference answers: 8/8
 cp .env.example .env                            # then add the key(s) you have
-python run_eval.py --provider anthropic --model claude-opus-5-5 --effort high --trials 3
-python run_eval.py --provider openai  --model <vision model id> --trials 3
-python run_eval.py --provider gemini  --model <model id> --trials 3
+python run_eval.py --provider gemini --model gemini-3.8-flash --trials 3 --pace 7       # free tier
+python run_eval.py --provider gemini --model gemini-3.5-flash-lite --trials 3 --pace 7  # free tier
+python run_eval.py --provider anthropic --model claude-opus-5-5 --effort high --trials 3   # paid, optional
+python run_eval.py --provider openai --model <vision model id> --trials 3                 # paid, optional
 python run_eval.py --provider random --trials 3
 python analysis/summarize.py --latest           # writes results/summary.md and a chart
 ```
@@ -94,14 +95,16 @@ python analysis/summarize.py --latest           # writes results/summary.md and 
 Notes:
 
 - `CT_ScanEval_Colab.ipynb` does the same in Google Colab, using Colab Secrets for the keys.
-- Each run is 8 tasks × 3 trials = 24 independent single-turn calls. No conversation history is shared between trials.
+- Each run is 8 tasks × 3 trials = 24 independent single-turn calls. No conversation history is shared between trials. Calls go trial by trial (all 8 tasks for trial 1, then trial 2, ...).
+- `--pace 7` sends one call every 7 s to stay under free-tier per-minute limits. If a provider's daily quota runs out, the run stops cleanly. The finished trials are kept, and `run.json` records that the run was incomplete.
 - The harness records the requested and served model ID, settings, token usage, cost estimate (`harness/pricing.json`), runtime and UTC timestamp.
 - For Claude, thinking is left at the model default (adaptive) and depth is set with `--effort`.
 - Refusal fallbacks to another model are deliberately **off**: in an eval every answer must come from the model named, so a refusal counts as a failed trial.
 
 **Cost and runtime:**
 
-- A Claude Opus 5.5 run at high effort is estimated at about $2–4 and a few minutes. 24 calls × ~2.5k input tokens is roughly $0.25; the rest is output and thinking tokens.
+- Gemini runs on Google's free tier cost $0. Each takes about 5 minutes at `--pace 7`.
+- A paid Claude Opus 5.5 run at high effort is estimated at about $2–4.
 - [AUTHOR: replace with the measured figures from `results/*/run.json`.]
 
 ### Rebuilding the dataset from scratch (optional)

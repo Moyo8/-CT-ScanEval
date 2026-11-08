@@ -27,11 +27,31 @@ def _b64(path):
     return base64.standard_b64encode(path.read_bytes()).decode("ascii")
 
 
-def _post_with_retry(url, headers, body, retries=5):
+class QuotaExhausted(Exception):
+    """The provider's daily quota is used up: stop the run, don't record failures."""
+
+
+def _retry_delay_s(resp, attempt):
+    """Seconds to wait before retrying a 429/5xx (uses the server's hint if given)."""
+    try:
+        for d in resp.json().get("error", {}).get("details", []):
+            if str(d.get("retryDelay", "")).endswith("s"):
+                return min(120.0, float(d["retryDelay"][:-1]) + 1)
+    except ValueError:
+        pass
+    ra = resp.headers.get("retry-after")
+    if ra and ra.isdigit():
+        return min(120.0, float(ra))
+    return min(60.0, 2.0 ** (attempt + 1))
+
+
+def _post_with_retry(url, headers, body, retries=6):
     for attempt in range(retries):
         resp = requests.post(url, headers=headers, json=body, timeout=600)
+        if resp.status_code == 429 and ("PerDay" in resp.text or "per day" in resp.text.lower()):
+            raise QuotaExhausted(resp.text[:500])
         if resp.status_code in (429, 500, 502, 503, 504) and attempt < retries - 1:
-            time.sleep(min(60, 2 ** (attempt + 1)))
+            time.sleep(_retry_delay_s(resp, attempt))
             continue
         resp.raise_for_status()
         return resp.json()
@@ -126,7 +146,9 @@ class GeminiProvider:
     name = "gemini"
 
     def __init__(self, model, effort=None):
-        self.key = os.environ["GEMINI_API_KEY"]
+        # The key may instead be injected by a proxy (e.g. a cloud environment
+        # secret); then GEMINI_API_KEY is unset and no header is sent here.
+        self.key = os.environ.get("GEMINI_API_KEY")
         self.model = model
         self.effort = effort  # not sent; Gemini thinking left at model default
 
@@ -142,7 +164,7 @@ class GeminiProvider:
         body = {"contents": [{"role": "user", "parts": parts}],
                 "generationConfig": {"maxOutputTokens": MAX_OUTPUT_TOKENS}}
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent"
-        data = _post_with_retry(url, {"x-goog-api-key": self.key}, body)
+        data = _post_with_retry(url, {"x-goog-api-key": self.key} if self.key else {}, body)
         cand = (data.get("candidates") or [{}])[0]
         text = "".join(p.get("text", "") for p in cand.get("content", {}).get("parts", []) if not p.get("thought"))
         usage = data.get("usageMetadata", {})

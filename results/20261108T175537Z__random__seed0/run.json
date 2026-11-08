@@ -1,0 +1,29 @@
+{
+  "run_id": "20261108T175537Z__random__seed0",
+  "provider": "random",
+  "model": "seed0",
+  "served_models": [
+    "random-seed0"
+  ],
+  "settings": {},
+  "trials_per_task": 3,
+  "tasks": [
+    "t01_find_large_nodule",
+    "t02_find_small_nodule",
+    "t03_find_juxtapleural_nodule",
+    "t04_no_nodule_hilum",
+    "t05_no_nodule_lower_lobes",
+    "t06_nodule_vs_vessels",
+    "t07_count_nodules",
+    "t08_measure_nodule"
+  ],
+  "started_utc": "20261108T175537Z",
+  "runtime_s": 0.1,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cost_usd": 0.0,
+  "cost_note": null,
+  "api_errors": 0,
+  "trials_completed": 24,
+  "incomplete": null
+}

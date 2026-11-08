@@ -2,14 +2,13 @@
 
 Deadline: **Nov 9, 05:15 GMT = 06:15 Nigerian time**. Aim to submit by midnight on Nov 8.
 
-## 1. Run the models (about 30 min)
-1. Open the notebook straight from GitHub (nothing to download):
-   https://colab.research.google.com/github/Moyo8/-CT-ScanEval/blob/main/CT_ScanEval_Colab.ipynb
-2. Add your key(s) as Colab Secrets, plus a `GITHUB_TOKEN` (see the last section of the notebook). Then use Runtime, Run all.
-3. You need **at least one frontier model with 3 trials**. A second model makes "results show a clear spread across models" possible. Good options:
-   - two Claude models (`claude-opus-5-5` and `claude-haiku-5-5`), or
-   - Claude plus whichever OpenAI or Gemini key you have.
-4. The last cell pushes `results/` and `transcripts/` back to GitHub, where Claude can read them and help with the analysis.
+## 1. Run the models, for free (about 30 min)
+You need a free Gemini API key from https://aistudio.google.com/apikey (Google account, no card). Then pick one route:
+
+- **Easiest: let Claude run it in this session.** The secure key form needs an up-to-date Claude app, or this session opened at claude.ai/code in a computer browser. Ask Claude to "request the Gemini key" from there. Claude then runs both Gemini models, reads the transcripts and pushes the results to GitHub.
+- **Colab:** open https://colab.research.google.com/github/Moyo8/-CT-ScanEval/blob/main/CT_ScanEval_Colab.ipynb, add `GEMINI_API_KEY` and `GITHUB_TOKEN` as Colab Secrets, then use Runtime, Run all. The last cell pushes the results to GitHub.
+
+Models run: `gemini-3.8-flash` (Google's newest Flash) and `gemini-3.5-flash-lite` (a smaller comparison). Both have 3 trials each, which gives the spread across models the rubric looks for. If the free daily limit cuts a run short, report the trials that finished and say so.
 
 Sanity checks from the guide:
 - If a strong model scores 0% everywhere, look for a broken task before claiming a finding.
