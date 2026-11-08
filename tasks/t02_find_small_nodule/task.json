@@ -1,0 +1,25 @@
+{
+  "id": "t02_find_small_nodule",
+  "grader": "find",
+  "image_labels": [
+    "Image 1 of 5 - most superior",
+    "Image 2 of 5",
+    "Image 3 of 5 (CENTRE image)",
+    "Image 4 of 5",
+    "Image 5 of 5 - most inferior"
+  ],
+  "images": [
+    "images/image_1.png",
+    "images/image_2.png",
+    "images/image_3.png",
+    "images/image_4.png",
+    "images/image_5.png"
+  ],
+  "prompt": "You are taking part in a research evaluation of chest CT interpretation. This is not clinical use.\n\nYou are given 5 consecutive axial images from one non-contrast chest CT scan (lung window: width 1500 HU, level -600 HU).\n- The images are ordered from superior (Image 1, toward the head) to inferior (Image 5, toward the feet). Adjacent images are 2.5 mm apart. Image 3 is the CENTRE image.\n- Orientation follows the standard radiological convention: the patient's RIGHT side is on the LEFT side of the image, and anterior (front of the chest) is at the top.\n- Every image is 512 x 512 pixels. Pixel spacing is 0.658 mm per pixel in both directions.\n- Pixel coordinates: x is the column (0 at the left edge, increasing to the right) and y is the row (0 at the top edge, increasing downward), in this 512 x 512 pixel grid.\n\nDefinition used in this evaluation (based on the LIDC-IDRI reading protocol): a pulmonary nodule is a focal, roughly round or oval SOLID opacity (soft-tissue density, as bright as a blood vessel on this window) within the lung, measuring at least 3 mm and at most 30 mm. It may touch the chest wall or the mediastinum. Hazy ground-glass opacities do not count as nodules in this evaluation. A blood vessel seen in cross-section is NOT a nodule: across adjacent images a vessel continues as a tubular structure that shifts position or branches, whereas a nodule appears and disappears over a few images.\n\nQuestion: Does the CENTRE image (Image 3) contain a pulmonary nodule?\nIf yes, give the pixel coordinates of the centre of the nodule on Image 3 (if there is more than one, report the largest) and say which of the patient's lungs it is in.\n\nReply with only a JSON object in exactly this format:\n{\"nodule_present\": true or false, \"x\": integer or null, \"y\": integer or null, \"patient_side\": \"right\" or \"left\" or null}\nUse null for x, y and patient_side when nodule_present is false.",
+  "image_size": [
+    512,
+    512
+  ],
+  "pixel_spacing_mm": 0.6582,
+  "slice_gap_mm": 2.5
+}

@@ -1,0 +1,49 @@
+{
+  "task_id": "t02_find_small_nodule",
+  "kind": "find_positive",
+  "nodule": {
+    "x": 440,
+    "y": 280,
+    "patient_side": "left",
+    "reader_long_axis_mm": [
+      4.42,
+      5.01,
+      4.79,
+      5.01
+    ],
+    "consensus_long_axis_mm": 4.75,
+    "lidc_mean_diameter_mm": 5.34,
+    "n_readers": 4,
+    "subtlety_median": 4.0,
+    "texture_median": 5.0
+  },
+  "answer": {
+    "nodule_present": true,
+    "x": 440,
+    "y": 280,
+    "patient_side": "left"
+  },
+  "grading": {
+    "location_tolerance_mm": 4.0
+  },
+  "grader": "find",
+  "title": "Detect and locate a small (5 mm) solid nodule",
+  "why_hard": "A 5 mm nodule is about 8 pixels across on a 512-pixel image and looks like the many vessel cross-sections around it. Telling them apart takes comparing adjacent slices. Nodules of this size are the most often missed in screening.",
+  "pixel_spacing_mm": 0.6582,
+  "source": {
+    "collection": "LIDC-IDRI",
+    "patient_id": "LIDC-IDRI-0803",
+    "study_instance_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.859733375254493048647590696534",
+    "series_instance_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.419601611032172899567156073142",
+    "slice_thickness_mm": 1.25,
+    "centre_slice_index": 121,
+    "slice_indices_superior_to_inferior": [
+      125,
+      123,
+      121,
+      119,
+      117
+    ],
+    "centre_slice_z_mm": -192.12
+  }
+}

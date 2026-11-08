@@ -1,0 +1,61 @@
+{
+  "run_id": "20261107T160219Z__random__seed0",
+  "task_id": "t08_measure_nodule",
+  "trial": 2,
+  "provider": "random",
+  "model": "seed0",
+  "served_model": "random-seed0",
+  "stop_reason": "end_turn",
+  "passed": false,
+  "score": 0.0,
+  "checks": {
+    "size_within_reader_range": false
+  },
+  "details": {
+    "answer": {
+      "long_axis_mm": 18.8
+    },
+    "accept_range_mm": [
+      8.5,
+      12.6
+    ],
+    "abs_error_vs_consensus_mm": 7.7
+  },
+  "error": null,
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "latency_s": 0.0,
+  "timestamp": "2026-11-07T16:02:19+00:00",
+  "prompt": "You are taking part in a research evaluation of chest CT interpretation. This is not clinical use.\n\nYou are given 5 consecutive axial images from one non-contrast chest CT scan (lung window: width 1500 HU, level -600 HU).\n- The images are ordered from superior (Image 1, toward the head) to inferior (Image 5, toward the feet). Adjacent images are 2.5 mm apart. Image 3 is the CENTRE image.\n- Orientation follows the standard radiological convention: the patient's RIGHT side is on the LEFT side of the image, and anterior (front of the chest) is at the top.\n- Every image is 512 x 512 pixels. Pixel spacing is 0.781 mm per pixel in both directions.\n- Pixel coordinates: x is the column (0 at the left edge, increasing to the right) and y is the row (0 at the top edge, increasing downward), in this 512 x 512 pixel grid.\n\nDefinition used in this evaluation (based on the LIDC-IDRI reading protocol): a pulmonary nodule is a focal, roughly round or oval SOLID opacity (soft-tissue density, as bright as a blood vessel on this window) within the lung, measuring at least 3 mm and at most 30 mm. It may touch the chest wall or the mediastinum. Hazy ground-glass opacities do not count as nodules in this evaluation. A blood vessel seen in cross-section is NOT a nodule: across adjacent images a vessel continues as a tubular structure that shifts position or branches, whereas a nodule appears and disappears over a few images.\n\nOne pulmonary nodule on the CENTRE image (Image 3) is marked with a yellow circle centred at pixel (x=428, y=281). The circle is drawn on every image and is larger than the nodule.\n\nQuestion: Measure the nodule's longest in-plane diameter on Image 3, in millimetres, as a radiologist would with electronic calipers (outer edge to outer edge, along the longest axis, in the plane of the image). Use the pixel spacing given above.\n\nReply with only a JSON object in exactly this format:\n{\"long_axis_mm\": number}",
+  "images": [
+    {
+      "label": "Image 1 of 5 - most superior",
+      "file": "tasks/t08_measure_nodule/images/image_1.png",
+      "sha256": "8875554920952f4e1c6eff7e2e503dca521a1b59088cc6711926a00b86275082"
+    },
+    {
+      "label": "Image 2 of 5",
+      "file": "tasks/t08_measure_nodule/images/image_2.png",
+      "sha256": "63f053ec6247bb921b904c2ad5a6f167c42634e81110e9de780e130ef48bb4b6"
+    },
+    {
+      "label": "Image 3 of 5 (CENTRE image)",
+      "file": "tasks/t08_measure_nodule/images/image_3.png",
+      "sha256": "b7b21f0f8a5ec1b59f89eefc65282810cd677304740d97fb6c894c025884dc50"
+    },
+    {
+      "label": "Image 4 of 5",
+      "file": "tasks/t08_measure_nodule/images/image_4.png",
+      "sha256": "62a34f7b094fc62c51318c24b67d2683f929aef4f4ec4900e9eecbb5ece5552d"
+    },
+    {
+      "label": "Image 5 of 5 - most inferior",
+      "file": "tasks/t08_measure_nodule/images/image_5.png",
+      "sha256": "118f8f35c311cc5b4bcd8e4b5a5321990d5875224d59a3e7a588f51d5df014a9"
+    }
+  ],
+  "response_text": "{\"long_axis_mm\": 18.8}",
+  "request_id": null
+}

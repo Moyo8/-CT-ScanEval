@@ -1,0 +1,32 @@
+{
+  "task_id": "t05_no_nodule_lower_lobes",
+  "kind": "find_negative",
+  "nearest_annotation_mm": 31.2,
+  "answer": {
+    "nodule_present": false,
+    "x": null,
+    "y": null,
+    "patient_side": null
+  },
+  "grading": {},
+  "grader": "find",
+  "title": "Correctly report no nodule in the lower lobes",
+  "why_hard": "Lower-lobe vessels run up and down, so on axial images they appear as dozens of small round dots, which are classic nodule mimics.",
+  "pixel_spacing_mm": 0.6582,
+  "source": {
+    "collection": "LIDC-IDRI",
+    "patient_id": "LIDC-IDRI-0803",
+    "study_instance_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.859733375254493048647590696534",
+    "series_instance_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.419601611032172899567156073142",
+    "slice_thickness_mm": 1.25,
+    "centre_slice_index": 95,
+    "slice_indices_superior_to_inferior": [
+      99,
+      97,
+      95,
+      93,
+      91
+    ],
+    "centre_slice_z_mm": -224.62
+  }
+}

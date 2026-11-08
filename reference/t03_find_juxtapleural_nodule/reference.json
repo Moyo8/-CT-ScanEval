@@ -1,0 +1,49 @@
+{
+  "task_id": "t03_find_juxtapleural_nodule",
+  "kind": "find_positive",
+  "nodule": {
+    "x": 179,
+    "y": 361,
+    "patient_side": "right",
+    "reader_long_axis_mm": [
+      15.73,
+      16.68,
+      16.43,
+      15.73
+    ],
+    "consensus_long_axis_mm": 16.02,
+    "lidc_mean_diameter_mm": 16.76,
+    "n_readers": 4,
+    "subtlety_median": 4.5,
+    "texture_median": 5.0
+  },
+  "answer": {
+    "nodule_present": true,
+    "x": 179,
+    "y": 361,
+    "patient_side": "right"
+  },
+  "grading": {
+    "location_tolerance_mm": 4.0
+  },
+  "grader": "find",
+  "title": "Detect and locate a juxtapleural nodule (attached to the chest wall)",
+  "why_hard": "The nodule touches the pleura, so it has no dark lung rim on one side and merges with the chest wall soft tissue. Juxtapleural nodules are a known blind spot for both radiologists and CAD systems.",
+  "pixel_spacing_mm": 0.7422,
+  "source": {
+    "collection": "LIDC-IDRI",
+    "patient_id": "LIDC-IDRI-0133",
+    "study_instance_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.138751917514248782010778675083",
+    "series_instance_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.133378195429627807109985347209",
+    "slice_thickness_mm": 1.25,
+    "centre_slice_index": 135,
+    "slice_indices_superior_to_inferior": [
+      139,
+      137,
+      135,
+      133,
+      131
+    ],
+    "centre_slice_z_mm": -134.75
+  }
+}

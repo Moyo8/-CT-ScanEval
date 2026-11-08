@@ -1,0 +1,70 @@
+{
+  "task_id": "t06_nodule_vs_vessels",
+  "kind": "choice",
+  "nodule": {
+    "x": 420,
+    "y": 305,
+    "patient_side": "left",
+    "reader_long_axis_mm": [
+      7.73,
+      7.2,
+      7.81,
+      6.3
+    ],
+    "consensus_long_axis_mm": 7.73,
+    "lidc_mean_diameter_mm": 7.87,
+    "n_readers": 4,
+    "subtlety_median": 4.0,
+    "texture_median": 5.0
+  },
+  "candidates": {
+    "A": {
+      "x": 381,
+      "y": 335
+    },
+    "B": {
+      "x": 420,
+      "y": 305
+    },
+    "C": {
+      "x": 378,
+      "y": 394
+    }
+  },
+  "vessel_candidates": [
+    {
+      "x": 378,
+      "y": 394,
+      "area": 38
+    },
+    {
+      "x": 381,
+      "y": 335,
+      "area": 57
+    }
+  ],
+  "answer": {
+    "nodule_label": "B"
+  },
+  "grading": {},
+  "grader": "choice",
+  "title": "Pick the true nodule among three marked candidates (two are vessels)",
+  "why_hard": "On the centre image the nodule and the two vessel cross-sections look alike. Only following each structure through the adjacent images separates them: a vessel persists and moves, the nodule ends.",
+  "pixel_spacing_mm": 0.7812,
+  "source": {
+    "collection": "LIDC-IDRI",
+    "patient_id": "LIDC-IDRI-0067",
+    "study_instance_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.185496461202477950899792771158",
+    "series_instance_uid": "1.3.6.1.4.1.14519.5.2.1.6279.6001.228511122591230092662900221600",
+    "slice_thickness_mm": 1.25,
+    "centre_slice_index": 129,
+    "slice_indices_superior_to_inferior": [
+      133,
+      131,
+      129,
+      127,
+      125
+    ],
+    "centre_slice_z_mm": -208.75
+  }
+}

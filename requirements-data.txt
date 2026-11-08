@@ -1,0 +1,6 @@
+# Only needed to re-download LIDC-IDRI and rebuild the tasks (data_prep/).
+-r requirements.txt
+pylidc==0.2.3
+pydicom==3.0.2
+SQLAlchemy==1.4.54
+setuptools==80.10.2
