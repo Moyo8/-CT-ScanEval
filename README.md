@@ -1,8 +1,8 @@
 # CT-ScanEval: can general-purpose multimodal models find and measure lung nodules on chest CT?
 
 > **Status:** framework, tasks, reference answers and graders are complete and validated.
-> Sections marked **[AUTHOR: ...]** must be filled in by the author from real runs and
-> their own review before submission. No model results are claimed until then.
+> Results so far: Gemini 3.5 Flash-Lite (Google free tier), 3 trials per task. Sections marked
+> **[AUTHOR: ...]** still need the author's own review.
 
 ## What it tests
 
@@ -105,7 +105,7 @@ Notes:
 
 - Gemini runs on Google's free tier cost $0. Each takes about 5 minutes at `--pace 7`.
 - A paid Claude Opus 5.5 run at high effort is estimated at about $2–4.
-- [AUTHOR: replace with the measured figures from `results/*/run.json`.]
+- Measured: the Gemini 3.5 Flash-Lite run (24 calls) took 204 s and $0 on the free tier, with 143k input tokens and 684 output tokens (see `results/*/run.json`).
 
 ### Rebuilding the dataset from scratch (optional)
 
@@ -131,23 +131,60 @@ python data_prep/make_review_sheets.py # review/<task>.png, reference overlaid f
 
 ## Results
 
-[AUTHOR: paste `results/summary.md` here after the real runs. Report every model run, including failed or partial ones.]
+Same 8 tasks, same graders and 3 independent trials per task for every model. Full table: `results/summary.md`. Chart: `results/charts/per_task_scores.png`.
 
-| Model (version, settings) | Trials per task | Pass rate | pass^3 | Cost per full run |
-|---|---|---|---|---|
-| [frontier model A] | 3 | | | |
-| [frontier model B] | 3 | | | |
-| [smaller model] | 3 | | | |
-| random baseline | 3 | | | $0 |
-| reference solution (oracle) | 1 | 100% | 100% | $0 |
+| Model (version, settings) | Trials per task | Pass rate | Mean score | pass@3 | pass^3 | Cost per full run |
+|---|---|---|---|---|---|---|
+| Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, API defaults, free tier, 9 Nov 2026) | 3 | 25% (6/24) | 0.46 | 25% | 25% | $0 (free tier) |
+| Random baseline (format-valid random answers) | 3 | 21% (5/24) | 0.33 | 50% | 0% | $0 |
+| Reference solution (oracle) | 1 | 100% | 1.00 | 100% | 100% | $0 |
+
+[AUTHOR: a run of Gemini 3.8 Flash (`gemini-3.8-flash`) was attempted in Colab and produced no results. State what the cell printed, for example "free-tier daily quota exhausted". Add any further model runs to this table.]
+
+| Task | Flash-Lite (passed / 3) | Mean score |
+|---|---|---|
+| t01 find large nodule | 0/3 | 0.67 |
+| t02 find small nodule | 0/3 | 0.33 |
+| t03 find juxtapleural nodule | 0/3 | 0.67 |
+| t04 no nodule (hilum) | 0/3 | 0.00 |
+| t05 no nodule (lower lobes) | 3/3 | 1.00 |
+| t06 nodule vs vessels | 3/3 | 1.00 |
+| t07 count nodules | 0/3 | 0.00 |
+| t08 measure nodule | 0/3 | 0.00 |
+
+Flash-Lite's pass rate (25%) is barely above the random baseline (21%). Its passes all come from one rule-out task (t05) and the three-way choice (t06). It answered every trial with bare JSON and no explanation, so the failure explanations below come from what it answered and where, not from its reasoning.
 
 ### Per-task notes
 
-[AUTHOR: for each task, write which models failed, how, and link one representative transcript (`transcripts/<run>/<task>__trialN.json`). Include at least one task where models came close and what tripped them up. Read the failures before writing: for each one, decide whether the model erred or the grader rejected a valid answer.]
+- **t01, large nodule (came close).** In all three trials it said "nodule present, patient's left", which is correct, then gave coordinates 84–87 mm from the nodule: (300, 387), (303, 393), (305, 393) against a reference of (314, 205). The x values are right; the y values are almost exactly double. Re-scaling only y from a 0–1000 frame to the 512-pixel grid puts all three points *inside* the radiologists' outline (`analysis/coordinate_check.py`). So the model found the nodule but reported its position in a coordinate frame the prompt did not ask for. The grader is right to fail it, because the prompt states the 512 × 512 pixel grid explicitly. [`t01_find_large_nodule` trial 1](transcripts/20261109T093716Z__gemini__gemini-3.5-flash-lite/t01_find_large_nodule__trial1.json)
+- **t03, juxtapleural nodule (came close).** Correct "present, patient's right" three times, but y = 681 lies outside the 512-pixel image. With y re-scaled, the points are 7–8 mm from the nodule's edge: near the right region, but not on it. [`t03_find_juxtapleural_nodule` trial 1](transcripts/20261109T093716Z__gemini__gemini-3.5-flash-lite/t03_find_juxtapleural_nodule__trial1.json)
+- **t02, small nodule (inconsistent).** The three trials disagreed:
+  - one pointed into the wrong lung ("right", 167 mm away even after re-scaling);
+  - one was near the nodule once y is re-scaled (6 mm), but y = 551 is outside the image;
+  - one said "no nodule".
+
+  pass^3 matters here: the same model gives three different answers to the same images. [`t02_find_small_nodule` trial 1](transcripts/20261109T093716Z__gemini__gemini-3.5-flash-lite/t02_find_small_nodule__trial1.json)
+- **t04, no nodule at the hilum (false positive).** It reported a nodule at the same spot in all three trials, (169, 529). With y re-scaled, (169, 271) is a round cross-section of a right hilar vessel that continues through all five images. No radiologist annotated anything there. This is the classic vessel-as-nodule error the task targets. [`t04_no_nodule_hilum` trial 1](transcripts/20261109T093716Z__gemini__gemini-3.5-flash-lite/t04_no_nodule_hilum__trial1.json)
+- **t05, no nodule in the lower lobes.** Correct in 3/3.
+- **t06, nodule vs vessels.** Picked B (the nodule) in 3/3.
+- **t07, count two nodules.** It answered 0, 0 and 1. Its single point is not on either nodule. It missed both the 21 mm nodule against the anterior pleura and the 8 mm nodule, on an image where both are visible. [`t07_count_nodules` trial 1](transcripts/20261109T093716Z__gemini__gemini-3.5-flash-lite/t07_count_nodules__trial1.json)
+- **t08, measure (gross under-measurement).** It answered 5.0 mm in all three trials. The four radiologists measured 10.0–11.1 mm on this image, and the accepted range is 8.5–12.6 mm. The nodule is about 14 pixels long at 0.78 mm per pixel. The answer matches neither 14 (a pixel count) nor ~11 (pixels × the stated spacing). That points to a generic "small nodule" size rather than a measurement. For a solid nodule at baseline, Lung-RADS puts 5 mm in category 2 (routine annual screening) and 11 mm in category 4A (3-month low-dose CT; PET/CT may be considered). [`t08_measure_nodule` trial 1](transcripts/20261109T093716Z__gemini__gemini-3.5-flash-lite/t08_measure_nodule__trial1.json)
+
+[AUTHOR: check these notes against the transcripts and the review sheets, and adjust the wording to your own reading.]
 
 ### Main failure mode / hot take
 
-[AUTHOR: one paragraph, backed by transcripts.]
+**The model can often tell *roughly where* a nodule is, but cannot *say* where it is, and does not measure.**
+
+- In all eight answers where Flash-Lite placed a nodule, x was in pixels while y was between 386 and 681. That is consistent with a 0–1000 normalised scale, even though the prompt defines a 512-pixel grid. Four of those points fall outside the image, and so does the t04 false positive at y = 529.
+- Re-scaling y afterwards moves the t01 answers onto the nodule. Any tool that uses model coordinates to place a marker, crop a region or hand off to a measuring step would therefore silently point at the wrong anatomy. Nothing in the bare JSON answer looks wrong.
+- The perception errors that remain are the textbook ones:
+  - a hilar vessel cross-section called a nodule;
+  - both nodules missed on one image;
+  - a size given without using the stated pixel spacing.
+- Closing the gap needs more than a better prompt. It needs grounded outputs, such as coordinates checked against the image size or a measurement tool, plus a check across adjacent slices before anything is called a nodule.
+
+[AUTHOR: make this paragraph your own, and revise it once a stronger model has been run.]
 
 ## Limitations
 
