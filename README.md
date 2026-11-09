@@ -181,4 +181,4 @@ Everything in this repository was built during the hackathon.
 
 I used Claude Code, an AI coding assistant, throughout. It wrote most of the code (data preparation, case builder, graders and tests, harness) and the first draft of this README. It also suggested the task list and the candidate cases. I picked the problem area and the dataset, and I ran the models.
 
-Every case was checked visually against the radiologists' outlines using the sheets in `review/`. The model transcripts were read one by one before the results above were written.
+I checked every case visually against the radiologists' outlines using the sheets in `review/`. The model transcripts were read one by one before the results above were written.
