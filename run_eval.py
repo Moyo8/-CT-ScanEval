@@ -169,6 +169,12 @@ def main():
                         f.cancel()
     if not records:
         raise SystemExit(f"no trials completed. {incomplete or ''}")
+    if all(r["stop_reason"] == "api_error" for r in records):
+        import shutil
+
+        shutil.rmtree(res_dir)
+        shutil.rmtree(tr_dir)
+        raise SystemExit(f"every call failed at the API, nothing saved. First error: {records[0]['error']}")
 
     records.sort(key=lambda r: (r["task_id"], r["trial"]))
     with open(res_dir / "results.jsonl", "w") as f:
