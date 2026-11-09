@@ -160,7 +160,7 @@ I don't think better prompting fixes this. It needs grounded output, such as coo
 
 **Only eight cases.** There's one case per task, so the results describe these eight cases, not overall accuracy. pass^3 measures consistency, not performance across a population.
 
-**The answer key is human too.** I only used nodules all four readers outlined, and the tolerances are based on how much those readers disagreed with each other. "No nodule" means none of the four marked a nodule of 3 mm or more there. Readers can miss things, so the negative slices were also checked visually.
+**The answer key is human too.** I only used nodules all four readers outlined, and the tolerances are based on how much those readers disagreed with each other. "No nodule" means none of the four marked a nodule of 3 mm or more there. Readers can miss things, so I also checked the negative slices myself.
 
 **Coordinates mix two skills.** Asking for pixel coordinates tests seeing the nodule and reporting a position at the same time. The 4 mm tolerance, the coordinate-free t06 task and `analysis/coordinate_check.py` help separate the two, and the results above show why that separation matters.
 
