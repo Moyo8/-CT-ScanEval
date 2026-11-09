@@ -1,0 +1,32 @@
+{
+  "run_id": "20261109T115727Z__gemini__gemini-3.6-flash",
+  "provider": "gemini",
+  "model": "gemini-3.6-flash",
+  "served_models": [
+    "gemini-3.6-flash"
+  ],
+  "settings": {
+    "thinking": "model default",
+    "maxOutputTokens": 16000
+  },
+  "trials_per_task": 3,
+  "tasks": [
+    "t01_find_large_nodule",
+    "t02_find_small_nodule",
+    "t03_find_juxtapleural_nodule",
+    "t04_no_nodule_hilum",
+    "t05_no_nodule_lower_lobes",
+    "t06_nodule_vs_vessels",
+    "t07_count_nodules",
+    "t08_measure_nodule"
+  ],
+  "started_utc": "20261109T115727Z",
+  "runtime_s": 15.1,
+  "input_tokens": 5976,
+  "output_tokens": 763,
+  "cost_usd": 0.0,
+  "cost_note": null,
+  "api_errors": 0,
+  "trials_completed": 1,
+  "incomplete": "daily quota reached after 1 of 24 calls: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day limit exceeded on Free Tier. See"
+}
