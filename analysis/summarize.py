@@ -1,7 +1,7 @@
 """Summarise all runs in results/ into results/summary.md (+ a chart).
 
     python analysis/summarize.py              # every run
-    python analysis/summarize.py --latest     # newest run per (provider, model, effort)
+    python analysis/summarize.py --latest     # one run per model: the most complete, newest if tied
 
 Metrics (per model):
     pass rate   share of all trials that passed
@@ -35,9 +35,12 @@ def load_runs(latest):
             f" (effort={effort})" if effort and "default" not in effort else "")
         runs.append((meta, recs))
     if latest:
+        # one run per model: the most complete one (most trials), newest if tied
         keep = {}
-        for meta, recs in runs:
-            keep[meta["label"]] = (meta, recs)  # sorted by run id = time, so last wins
+        for meta, recs in runs:  # sorted by run id = time
+            best = keep.get(meta["label"])
+            if best is None or len(recs) >= len(best[1]):
+                keep[meta["label"]] = (meta, recs)
         runs = list(keep.values())
     return runs
 
@@ -49,8 +52,10 @@ def stats(recs):
         by_task[r["task_id"]].append(r)
         by_trial[r["trial"]].append(r["passed"])
     k = max(len(v) for v in by_task.values())
+    k_min = min(len(v) for v in by_task.values())
     return dict(
         k=k,
+        k_label=str(k) if k_min == k else f"{k_min}-{k}",
         n=len(recs),
         pass_rate=sum(r["passed"] for r in recs) / len(recs),
         mean_score=sum(r["score"] for r in recs) / len(recs),
@@ -84,7 +89,7 @@ def main():
         table.append((meta, s))
         cost = f"${meta['cost_usd']:.2f}" if meta.get("cost_usd") is not None else "n/a"
         lines.append(
-            f"| {meta['label']} | {', '.join(meta['served_models'])} | {s['k']} | {pct(s['pass_rate'])} "
+            f"| {meta['label']} | {', '.join(meta['served_models'])} | {s['k_label']} | {pct(s['pass_rate'])} "
             f"({pct(s['spread'][0])}-{pct(s['spread'][1])}) | {s['mean_score']:.2f} | {pct(s['pass_at_k'])} | "
             f"{pct(s['pass_hat_k'])} | {cost} | {meta['runtime_s']:.0f}s |")
     lines += ["", "## Per task (passed trials / trials, mean partial-credit score)", "",
